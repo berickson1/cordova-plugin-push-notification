@@ -8,7 +8,9 @@ import com.google.android.gcm.GCMRegistrar;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.CordovaPreferences;
 import org.apache.cordova.CordovaWebView;
+import org.apache.cordova.ConfigXmlParser;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +33,7 @@ public class PushPlugin extends CordovaPlugin {
   private static String gSenderID;
   private static Bundle gCachedExtras = null;
   private static boolean gForeground = false;
+  private static int gNotificationColor = 0xffd10000;
 
   /**
    * Gets the application context from cordova's main activity.
@@ -124,6 +127,15 @@ public class PushPlugin extends CordovaPlugin {
   public void initialize(CordovaInterface cordova, CordovaWebView webView) {
     super.initialize(cordova, webView);
     gForeground = true;
+
+    ConfigXmlParser configParser = new ConfigXmlParser();
+    configParser.parse(cordova.getActivity());
+    CordovaPreferences prefs = configParser.getPreferences();
+    int notificationColor = prefs.getInteger("push-plugin-notification-color", 0);
+
+    if (notificationColor != 0){
+      gNotificationColor = notificationColor;
+    }
   }
 
   @Override
@@ -217,5 +229,9 @@ public class PushPlugin extends CordovaPlugin {
 
   public static boolean isActive() {
     return gWebView != null;
+  }
+
+  public static int notificationColor() {
+    return gNotificationColor;
   }
 }

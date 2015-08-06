@@ -96,14 +96,13 @@ public class GCMIntentService extends GCMBaseIntentService {
 
     NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
       .setDefaults(defaults)
+      .setColor(PushPlugin.notificationColor())
       .setSmallIcon(getNotificationIcon(context))
       .setWhen(System.currentTimeMillis())
       .setContentTitle(extras.getString("title"))
       .setTicker(extras.getString("title"))
       .setContentIntent(contentIntent)
       .setAutoCancel(true);
-
-    mBuilder.setColor(0xffd10000);
 
     String message = extras.getString("message");
     if (message != null) {
